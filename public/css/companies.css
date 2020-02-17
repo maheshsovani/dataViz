@@ -1,0 +1,22 @@
+svg {
+  border: 1px solid grey;
+}
+
+.axis-label {
+  font-size: 20px;
+  text-anchor: middle;
+}
+
+.x.axis text {
+  text-anchor: end;
+  font-weight: bold;
+  transform: rotate(-40deg);
+}
+
+:{
+  insert EmptyTree val=Node val EmptyTree EmptyTree 
+  insert (Node val left right) newVal=
+    if newVal > val 
+    then (Node val left (insert (right) newVal))
+    else (Node val (insert (left) newVal) right)
+:}

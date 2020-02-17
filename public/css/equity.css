@@ -1,0 +1,15 @@
+svg {
+  border: 1px solid grey;
+  margin-top: 20px;
+}
+
+.axis-label {
+  font-size: 20px;
+  text-anchor: middle;
+}
+
+.x.axis text {
+  text-anchor: end;
+  font-weight: bold;
+  transform: rotate(-40deg);
+}

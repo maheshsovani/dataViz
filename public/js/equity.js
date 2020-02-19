@@ -1,4 +1,4 @@
-const chartSize = { width: 800, height: 600 };
+const chartSize = { width: 1200, height: 650 };
 const margin = { left: 100, right: 10, top: 10, botttom: 150 };
 const width = chartSize.width - (margin.left + margin.right);
 const height = chartSize.height - (margin.top + margin.botttom);
@@ -10,7 +10,7 @@ const initChart = () => {
     .attr('width', chartSize.width);
 
   const timeG = svg.append('g')
-    .attr('class', 'prices')
+    .attr('class', 'quotes')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
   const xlabel = timeG.append('text')
@@ -24,7 +24,7 @@ const initChart = () => {
     .attr('transform', 'rotate(-90)')
     .attr('x', -(height / 2))
     .attr('y', -60)
-    .text('PRICES');
+    .text('CLOSE');
 
   timeG.append('g')
     .attr('class', 'y axis');
@@ -36,15 +36,25 @@ const initChart = () => {
   timeG.selectAll('.x.axis text')
     .attr('transform', 'rotate(-40)')
     .attr('x', -5)
-    .attr('y', 10)
+    .attr('y', 10);
+
+  timeG.append("path")
+    .attr('class', 'close');
+
+  timeG.append("path")
+    .attr('class', 'sma')
 }
 
-const updateChart = (prices) => {
+const updateChart = (quotes) => {
   const svg = d3.select('#chart-area svg');
-  const svgGroup = d3.select('.prices');
+  const filtered_quotes = _.filter(quotes, "SMA");
+  const maxSma = _.maxBy(filtered_quotes, "SMA").SMA;
+  const minSma = _.minBy(filtered_quotes, "SMA").SMA;
+  const minClose = _.minBy(quotes, "Close").Close;
+  const maxClose = _.maxBy(quotes, "Close").Close;
 
   const y = d3.scaleLinear()
-    .domain([_.minBy(prices, "Close").Close, _.maxBy(prices, "Close").Close])
+    .domain([Math.min(minSma, minClose), Math.max(maxSma, maxClose)])
     .range([height, 0]);
 
   const yAxis = d3.axisLeft(y).ticks(10);
@@ -52,23 +62,48 @@ const updateChart = (prices) => {
   svg.select('.y.axis').call(yAxis);
 
   const x = d3.scaleTime()
-    .domain([new Date(_.first(prices).Date), new Date(_.last(prices).Date)])
+    .domain([new Date(_.first(quotes).Date), new Date(_.last(quotes).Date)])
     .range([0, width]);
-
   const xAxis = d3.axisBottom(x);
   svg.select('.x.axis').call(xAxis);
+  const line = d3.line().x(q => x(q.Time)).y(q => y(q.Close))
+  const line1 = d3.line().x(q => x(q.Time)).y(q => y(q.SMA));
+  d3.select(".close").attr('d', line(quotes))
+  d3.select(".sma").attr('d', line1(_.filter(quotes, "SMA")))
 }
 
 const parseData = function ({ AdjClose, Volume, Date, ...numerics }) {
   _.forEach(numerics, (v, k) => numerics[k] = +v)
-  return { Date, ...numerics }
+  const date = new window.Date(Date)
+  return { Date, Time: date, ...numerics }
 }
 
-const startVisualization = (data) => {
-  initChart()
-  updateChart(data)
+const getAverage = function (data) {
+  let sum = 0;
+  _.forEach(_.takeRight(data, 100), (obj => sum += obj.Close));
+  return sum / 100;
 }
 
+const analyseData = function (quotes) {
+  const data = quotes.slice(0);
+  while (data.length > 100) {
+    quotes[data.length - 1]["SMA"] = getAverage(data);
+    data.pop();
+  }
+  return quotes;
+}
+
+const startVisualization = (niftyData) => {
+  const analysedData = analyseData(niftyData);
+  initChart();
+  updateChart(analysedData);
+  const dataToBeModified = analysedData.slice(0);
+  const slider = createD3RangeSlider(0, analysedData.length - 1, "#slider-container");
+  slider.range(0, analysedData.length - 1);
+  slider.onChange((newRange) => {
+    updateChart(dataToBeModified.slice(newRange.begin, newRange.end));
+  })
+}
 
 const main = () => {
   d3.csv('data/Nifty.csv', parseData).then(startVisualization);

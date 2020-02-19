@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="css/equity.css">
+
   </head>
 
   <body>
@@ -16,12 +17,22 @@
       integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"
       integrity="sha256-m0QmIsBXcOMiETRmpT3qg2IQ/i0qazJA2miCHzOmS1Y=" crossorigin="anonymous"></script>
+    <!-- Range slider code -->
+    <script src="https://cdn.rawgit.com/RasmusFonseca/d3RangeSlider/master/d3RangeSlider.js"></script>
+    <link href="https://cdn.rawgit.com/RasmusFonseca/d3RangeSlider/master/d3RangeSlider.css" rel="stylesheet">
+    <!-- Range slider code -->
     <script src="js/equity.js"></script>
-
     <div class="container">
+      <label>input1</label>
+      <label>input2</label>
+      <div class="input-items-container">
+        <div id="slider-container"></div>
+        <input type="number" class="input-item" />
+        <input type="number" class="input-item" />
+      </div>
       <div class="row">
         <div id="chart-area" class="col-sm"></div>
-        <div id="chart-data" class="col-sm"></div>
+        <!-- <div id="chart-data" class="col-sm"></div> -->
       </div>
     </div>
   </body>

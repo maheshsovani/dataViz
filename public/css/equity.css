@@ -1,6 +1,5 @@
 svg {
   border: 1px solid grey;
-  margin-top: 20px;
 }
 
 .axis-label {
@@ -12,4 +11,40 @@ svg {
   text-anchor: end;
   font-weight: bold;
   transform: rotate(-40deg);
+}
+
+.close {
+  fill: none;
+  stroke: black;
+  stroke-width: 3px;
+}
+
+.sma {
+  fill: none;
+  stroke: blue;
+  stroke-width: 3px;
+}
+
+.input-items-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#chart-area {
+  margin-top: 10px;
+}
+
+#slider-container {
+  position: relative;
+  height: 30px;
+  background-color: #eeeef5;
+  margin: 20px 0;
+  width: 800px;
+}
+
+.input-item {
+  display: flex;
+  height: 30px;
+  width: 150px;
 }

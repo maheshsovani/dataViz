@@ -57,7 +57,7 @@ const updateChart = (quotes) => {
     .domain([Math.min(minSma, minClose), Math.max(maxSma, maxClose)])
     .range([height, 0]);
 
-  const yAxis = d3.axisLeft(y).ticks(10);
+  const yAxis = d3.axisLeft(y).ticks(10).tickSize(-width);
 
   svg.select('.y.axis').call(yAxis);
 
@@ -68,7 +68,7 @@ const updateChart = (quotes) => {
     .domain([startDate, endDate])
     .range([0, width]);
 
-  const xAxis = d3.axisBottom(x);
+  const xAxis = d3.axisBottom(x).tickSize(-height);
   svg.select('.x.axis').call(xAxis);
 
   const line = d3.line().x(q => x(q.Time)).y(q => y(q.Close))
@@ -101,11 +101,11 @@ const getTransactionSummary = function (transaction, id) {
   }
 }
 
-const createTransactionsTable = function (matrix) {
-  const newMatrix = _.filter(_.filter(matrix, "sell"), "buy");
+const createTransactionsTable = function (transaction) {
+  const newTransaction = _.filter(_.filter(transaction, "sell"), "buy");
   tr = d3.select(".objecttable tbody") // creating the tr's
     .selectAll("tr")
-    .data(newMatrix)
+    .data(newTransaction)
     .enter().append("tr");
 
   tr.selectAll("td") // creating the td's
@@ -152,11 +152,17 @@ const analyseData = function (quotes) {
   return quotes;
 }
 
+const showSelectedDates = function (startDate, endDate) {
+  const showElement = document.getElementById("selected-range");
+  showElement.innerText = `${startDate.toLocaleDateString()}  - ${endDate.toLocaleDateString()}`;
+}
 const createTimeRangeSlider = function (analysedData) {
   const dataToBeModified = analysedData.slice(0);
   const slider = createD3RangeSlider(0, analysedData.length - 1, "#slider-container");
   slider.range(0, analysedData.length - 1);
+  showSelectedDates(_.first(analysedData).Time, _.last(analysedData).Time);
   slider.onChange((newRange) => {
+    showSelectedDates(analysedData[newRange.begin].Time, analysedData[newRange.end].Time);
     updateChart(dataToBeModified.slice(newRange.begin, newRange.end));
   })
 }
@@ -174,6 +180,7 @@ const summerizeTransaction = function (transactions) {
     return acc;
   }, { totalWinAmount: 0, totalLossAmount: 0, winCount: 0, lossCount: 0 })
 }
+
 const showTransactionSummary = function (transactions) {
   const { totalLossAmount, totalWinAmount, winCount, lossCount } = summerizeTransaction(transactions);
   const totalTransactions = transactions.length;

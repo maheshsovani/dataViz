@@ -35,12 +35,26 @@ svg {
   margin-top: 10px;
 }
 
+.selection-container {
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 2%;
+  top: -100px;
+  left: 80px;
+}
+
 #slider-container {
   position: relative;
   height: 30px;
   background-color: #eeeef5;
-  margin: 20px 0;
-  width: 800px;
+  width: 80%;
+}
+
+#selected-range {
+  margin-left: 20px;
+  font-size: 12px;
+  text-align: center;
 }
 
 .input-item {
@@ -71,4 +85,8 @@ td {
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+line {
+  color: lightgrey;
 }

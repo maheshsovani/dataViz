@@ -16,13 +16,13 @@ svg {
 .close {
   fill: none;
   stroke: black;
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 .sma {
   fill: none;
   stroke: blue;
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 .input-items-container {
@@ -47,4 +47,28 @@ svg {
   display: flex;
   height: 30px;
   width: 150px;
+}
+
+h3 {
+  margin-top: 50px;
+  text-align: center;
+}
+
+th,
+td {
+  text-align: center;
+}
+
+.objecttable {
+  width: 60%;
+}
+
+.summary-table {
+  width: 35%;
+}
+
+.table-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
